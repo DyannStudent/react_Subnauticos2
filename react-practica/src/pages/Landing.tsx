@@ -1,8 +1,13 @@
+import { Link } from 'react-router-dom';
+
 export function Landing() {
   return (
-    <div>
-      <h1>Welcome to the Landing Page</h1>
-      <p>This is the landing page of our React application.</p>
-    </div>
+    <main>
+      <h1>Bienvenido a Subnauticos **2**</h1>
+      <p>
+        Explora nuestra plataforma y descubre las herramientas que tenemos!!¡¡
+      </p>
+      <Link to="/login">Iniciar sesión</Link>
+    </main>
   );
 }
