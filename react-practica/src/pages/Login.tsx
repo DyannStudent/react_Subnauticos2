@@ -37,5 +37,5 @@ export function Login() {
         <button type="submit">Entrar</button>
       </form>
     </main>
-  )
+  );
 }
