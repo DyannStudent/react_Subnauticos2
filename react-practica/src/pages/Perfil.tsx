@@ -44,6 +44,9 @@ export function Perfil() {
         marginTop: '1rem',
         maxWidth: '400px'
       }}>
+        <h2>Tarjerta de lucas campos</h2>
+        <p><strong>Rol / Proyecto:</strong> Desarrollador de software colaborando en el área y carrera de Obstetricia.</p>
+
 
       </section>
     </div>
