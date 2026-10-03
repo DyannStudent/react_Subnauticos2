@@ -2,12 +2,13 @@ import { createContext, useState, type Dispatch, type ReactNode, type SetStateAc
 
 export interface Usuario {
   nombre: string;
-  email: string;
+  email?: string;
 }
 
 export interface AuthContextType {
   usuario: Usuario | null;
   setUsuario: Dispatch<SetStateAction<Usuario | null>>;
+  iniciarSesion: (nombreUsuario: string, contrasena: string) => void;
 }
 
 // El contexto se exporta para que las páginas puedan consumirlo con useContext.
@@ -21,8 +22,13 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps) {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
 
+  function iniciarSesion(nombreUsuario: string, _contrasena: string) {
+    void _contrasena;
+    setUsuario({ nombre: nombreUsuario });
+  }
+
   return (
-    <AuthContext.Provider value={{ usuario, setUsuario }}>
+    <AuthContext.Provider value={{ usuario, setUsuario, iniciarSesion }}>
       {children}
     </AuthContext.Provider>
   );
