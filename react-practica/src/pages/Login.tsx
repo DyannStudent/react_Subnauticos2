@@ -1,11 +1,16 @@
 import { useState, type FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom'; // parte ote importada
 
 export function Login() {
   const [nombreUsuario, setNombreUsuario] = useState<string>('');
   const [contrasena, setContrasena] = useState<string>('');
 
+  const navigate = useNavigate(); // Instancia del hook para navegar (gemini me tuvo q explicar esto por q les juro q no lo pude conectar bien)
+
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    navigate(`/perfil/${nombreUsuario}`); // aqui se redirije al perfil desde el user
   }
 
   return (
@@ -37,5 +42,5 @@ export function Login() {
         <button type="submit">Entrar</button>
       </form>
     </main>
-  )
+  );
 }
