@@ -47,6 +47,11 @@ export function Perfil() {
         <h2>Tarjerta de lucas campos</h2>
         <p><strong>Rol / Proyecto:</strong> Desarrollador de software colaborando en el área y carrera de Obstetricia.</p>
 
+        {/* Botón con estado useState */}
+        <button onClick={handleIncrementar} style={{ padding: '0.5rem 1rem', cursor: 'pointer' }}>
+          Fumo ({FuMo})
+        </button>
+
 
       </section>
     </div>
