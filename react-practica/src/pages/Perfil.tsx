@@ -52,7 +52,12 @@ export function Perfil() {
           Fumo ({FuMo})
         </button>
 
-
+        {/* Mensaje condicional exclusivo al llegar exactamente a 11 clics */}
+        {FuMo === 11 && (
+          <p style={{ color: 'royalblue', fontWeight: 'bold', marginTop: '0.5rem' }}>
+            ~fumo fumo~
+          </p>
+        )}
       </section>
     </div>
   );
