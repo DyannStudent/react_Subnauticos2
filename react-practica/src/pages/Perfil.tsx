@@ -13,7 +13,7 @@ export function Perfil() {
   const esUsuarioLogueado = auth?.usuario === usuarioUrl;
 
   // 3. Estado propio (Contador de clics/me gusta)
-  const [meGusta, setMeGusta] = useState<number>(0);
+  const [FuMo, setFuMo] = useState<number>(0);
 
   // 4. useEffect propio: Guarda en localStorage la última visita
   useEffect(() => {
@@ -22,7 +22,7 @@ export function Perfil() {
   }, []);
 
   const handleIncrementar = () => {
-    setMeGusta((prev) => prev + 1);
+    setFuMo((prev) => prev + 1);
   };
 
   return (
