@@ -15,8 +15,6 @@ export function Login() {
       nombre: email.split('@')[0],
       email,
     });
-
-    console.log('Iniciando sesión con:', email, password);
   };
 
   return (
