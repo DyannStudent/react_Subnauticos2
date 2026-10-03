@@ -1,16 +1,23 @@
-import { useState, type FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom'; // parte ote importada
+import { useContext, useState, type FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
 export function Login() {
+  const auth = useContext(AuthContext);
   const [nombreUsuario, setNombreUsuario] = useState<string>('');
   const [contrasena, setContrasena] = useState<string>('');
+  const navigate = useNavigate();
 
-  const navigate = useNavigate(); // Instancia del hook para navegar (gemini me tuvo q explicar esto por q les juro q no lo pude conectar bien)
+  if (!auth) {
+    return null;
+  }
+
+  const { iniciarSesion } = auth;
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
-    navigate(`/perfil/${nombreUsuario}`); // aqui se redirije al perfil desde el user
+    iniciarSesion(nombreUsuario, contrasena);
+    navigate(`/perfil/${encodeURIComponent(nombreUsuario)}`);
   }
 
   return (
