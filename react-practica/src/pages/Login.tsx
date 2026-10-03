@@ -1,22 +1,23 @@
 import { useContext, useState, type FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
 export function Login() {
   const auth = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   if (!auth) return null;
+
+  const { iniciarSesion } = auth;
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    auth.setUsuario({
-      nombre: email.split('@')[0],
-      email,
-    });
-
-    console.log('Iniciando sesión con:', email, password);
+    const nombreUsuario = email.split('@')[0];
+    iniciarSesion(nombreUsuario, password);
+    navigate(`/perfil/${encodeURIComponent(nombreUsuario)}`);
   };
 
   return (

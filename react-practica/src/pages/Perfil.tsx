@@ -1,42 +1,95 @@
-import { useState, useEffect, useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext'; // esta es la ruta a tu contexto, por ahora conecta, por ahora
+import { AuthContext } from '../context/AuthContext';
+import './Perfil.css';
 
 export function Perfil() {
-  // 1. Obtener el parámetro de la URL
   const { usuario: usuarioUrl } = useParams<{ usuario: string }>();
-  
-  // 2. Obtener el usuario autenticado del contexto
   const auth = useContext(AuthContext);
   
-  // Verificar si el usuario de la URL coincide con el del contexto
-  const esUsuarioLogueado = auth?.usuario === usuarioUrl;
+  // Soporte para ambos formatos de objeto de usuario en el contexto (cadena o bien objeto { nombre })
+  const usuarioLogueadoObj = auth?.usuario;
+  const nombreLogueado = typeof usuarioLogueadoObj === 'string' 
+    ? usuarioLogueadoObj 
+    : usuarioLogueadoObj?.nombre;
 
-  // 3. Estado propio (Contador de clics/me gusta)
+  // Estados de cada integrante
+  const [meGustas, setMeGustas] = useState<number>(0);
   const [FuMo, setFuMo] = useState<number>(0);
 
-  // 4. useEffect propio: Guarda en localStorage la última visita
-  useEffect(() => {
-    const ahora = new Date().toLocaleString();
-    localStorage.setItem('ultimaVisitaPerfil', ahora);
-  }, []);
+  // Validación de coincidencia de usuario
+  const esUsuarioLogueado = 
+    Boolean(nombreLogueado) && 
+    Boolean(usuarioUrl) && 
+    nombreLogueado?.toLowerCase() === usuarioUrl?.toLowerCase();
 
-  const handleIncrementar = () => {
+  // useEffect para guardar la última visita en localStorage
+  useEffect(() => {
+    if (!esUsuarioLogueado || !nombreLogueado) return;
+
+    const claveVisita = `perfil:ultima-visita:${nombreLogueado.toLowerCase()}`;
+    localStorage.setItem(claveVisita, new Date().toISOString());
+    localStorage.setItem('ultimaVisitaPerfil', new Date().toLocaleString());
+  }, [esUsuarioLogueado, nombreLogueado]);
+
+  const handleIncrementarFuMo = () => {
     setFuMo((prev) => prev + 1);
   };
 
-  return (
-    <div>
-      <h1>Bienvenido a la página de Perfil</h1>
-      
-      {/* Verificación con useParams y useContext, si, gemini tambien me ayudo con esto */}
-      {esUsuarioLogueado ? (
-        <p style={{ color: 'green' }}>estas en tu perfilsegun yo ({usuarioUrl})</p>
-      ) : (
-        <p style={{ color: 'orange' }}>Viendo el perfil público de: {usuarioUrl}</p>
-      )}
+  // Validaciones de renderizado defensivo
+  if (!usuarioLogueadoObj) {
+    return (
+      <main className="perfil-page">
+        <h1>Perfil</h1>
+        <p>Inicia sesión para ver este perfil.</p>
+      </main>
+    );
+  }
 
-      {/* Tarjeta del ote */}
+  if (!esUsuarioLogueado) {
+    return (
+      <main className="perfil-page">
+        <h1>Perfil</h1>
+        <p>El usuario de la URL no coincide con el usuario que inició sesión.</p>
+        <p style={{ color: 'orange' }}>Viendo el perfil público de: {usuarioUrl}</p>
+      </main>
+    );
+  }
+
+  return (
+    <main className="perfil-page">
+      <h1>Perfil de {nombreLogueado}</h1>
+      <p style={{ color: 'green' }}>✓ Estás en tu perfil ({usuarioUrl})</p>
+
+      {/* Tarjeta de tu compañero */}
+      <article className="perfil-card" aria-labelledby="proyecto-title">
+        <p className="perfil-card__label">Proyecto · Laboratorio 1</p>
+        <h2 id="proyecto-title">Videoteca educativa</h2>
+        <p>
+          Plataforma de recursos audiovisuales para la Universidad Central y su
+          carrera de Obstetricia.
+        </p>
+        <dl className="perfil-card__details">
+          <div>
+            <dt>Institución</dt>
+            <dd>Universidad Central</dd>
+          </div>
+          <div>
+            <dt>Carrera</dt>
+            <dd>Obstetricia</dd>
+          </div>
+        </dl>
+        <div className="perfil-card__likes">
+          <p aria-live="polite">
+            <strong>{meGustas}</strong> me gusta
+          </p>
+          <button type="button" onClick={() => setMeGustas((total) => total + 1)}>
+            Me gusta
+          </button>
+        </div>
+      </article>
+
+      {/* Tarjeta de Lucas Campos (Tu parte) */}
       <section style={{
         border: '1px solid #ccc',
         borderRadius: '8px',
@@ -44,21 +97,19 @@ export function Perfil() {
         marginTop: '1rem',
         maxWidth: '400px'
       }}>
-        <h2>Tarjerta de lucas campos</h2>
+        <h2>Tarjeta de Lucas Campos</h2>
         <p><strong>Rol / Proyecto:</strong> Desarrollador de software colaborando en el área y carrera de Obstetricia.</p>
 
-        {/* Botón con estado useState */}
-        <button onClick={handleIncrementar} style={{ padding: '0.5rem 1rem', cursor: 'pointer' }}>
+        <button onClick={handleIncrementarFuMo} style={{ padding: '0.5rem 1rem', cursor: 'pointer' }}>
           Fumo ({FuMo})
         </button>
 
-        {/* Mensaje condicional exclusivo al llegar exactamente a 11 clics */}
         {FuMo === 11 && (
           <p style={{ color: 'royalblue', fontWeight: 'bold', marginTop: '0.5rem' }}>
             ~fumo fumo~
           </p>
         )}
       </section>
-    </div>
+    </main>
   );
 }
