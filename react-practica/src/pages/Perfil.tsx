@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext'; // Ajusta la ruta a tu contexto
+import { AuthContext } from '../context/AuthContext'; // esta es la ruta a tu contexto, por ahora conecta, por ahora
 
 export function Perfil() {
   // 1. Obtener el parámetro de la URL
