@@ -1,53 +1,49 @@
 import { useContext, useState, type FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
 export function Login() {
   const auth = useContext(AuthContext);
-  const [nombreUsuario, setNombreUsuario] = useState<string>('');
-  const [contrasena, setContrasena] = useState<string>('');
-  const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  if (!auth) {
-    return null;
-  }
+  if (!auth) return null;
 
-  const { iniciarSesion } = auth;
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    iniciarSesion(nombreUsuario, contrasena);
-    navigate(`/perfil/${encodeURIComponent(nombreUsuario)}`);
-  }
+    auth.setUsuario({
+      nombre: email.split('@')[0],
+      email,
+    });
+
+    console.log('Iniciando sesión con:', email, password);
+  };
 
   return (
-    <main>
-      <h1>Iniciar sesión</h1>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="nombreUsuario">Nombre de usuario</label>
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label htmlFor="email">Correo:</label>
         <input
-          id="nombreUsuario"
-          name="nombreUsuario"
-          type="text"
-          autoComplete="username"
-          value={nombreUsuario}
-          onChange={(event) => setNombreUsuario(event.target.value)}
+          type="email"
+          id="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           required
         />
+      </div>
 
-        <label htmlFor="contrasena">Contraseña</label>
+      <div>
+        <label htmlFor="password">Contraseña:</label>
         <input
-          id="contrasena"
-          name="contrasena"
           type="password"
-          autoComplete="current-password"
-          value={contrasena}
-          onChange={(event) => setContrasena(event.target.value)}
+          id="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           required
         />
+      </div>
 
-        <button type="submit">Entrar</button>
-      </form>
-    </main>
+      <button type="submit">Iniciar Sesión</button>
+    </form>
   );
 }
