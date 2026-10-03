@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
 
 export function Perfil() {
@@ -8,6 +8,13 @@ export function Perfil() {
   const [likes, setLikes] = useState(0);
 
   const esMiPerfil = auth?.usuario?.nombre === usuario;
+
+  useEffect(() => {
+    if (esMiPerfil) {
+      const currentDate = new Date().toLocaleString();
+      localStorage.setItem(`lastVisit_${usuario}`, currentDate);
+    }
+  }, [esMiPerfil, usuario]);
 
   return (
     <div>
