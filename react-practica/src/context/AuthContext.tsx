@@ -9,6 +9,7 @@ export interface AuthContextType {
   usuario: Usuario | null;
   setUsuario: Dispatch<SetStateAction<Usuario | null>>;
   iniciarSesion: (nombreUsuario: string, contrasena: string) => void;
+  cerrarSesion: () => void;
 }
 
 // El contexto se exporta para que las páginas puedan consumirlo con useContext.
@@ -27,8 +28,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setUsuario({ nombre: nombreUsuario });
   }
 
+  function cerrarSesion() {
+    setUsuario(null);
+  }
+
   return (
-    <AuthContext.Provider value={{ usuario, setUsuario, iniciarSesion }}>
+    <AuthContext.Provider value={{ usuario, setUsuario, iniciarSesion, cerrarSesion }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from 'react';
-import { useContext, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import './Perfil.css';
@@ -16,10 +15,19 @@ export function Perfil() {
   const nombreLogueado = typeof usuarioLogueadoObj === 'string' 
     ? usuarioLogueadoObj 
     : usuarioLogueadoObj?.nombre;
+  const claveUsuario = nombreLogueado?.toLowerCase().split(/[._-]/)[0];
 
   // Estados de cada integrante
   const [meGustas, setMeGustas] = useState<number>(0);
   const [FuMo, setFuMo] = useState<number>(0);
+  const [likesMario, setLikesMario] = useState<number>(0);
+  const [lastVisit] = useState<string | null>(() => {
+    if (!nombreLogueado) return null;
+
+    const claveVisita = `perfil:ultima-visita:${nombreLogueado.toLowerCase()}`;
+    const storedDate = localStorage.getItem(claveVisita);
+    return storedDate ? new Date(storedDate).toLocaleString() : null;
+  });
 
   // Validación de coincidencia de usuario
   const esUsuarioLogueado = 
@@ -32,7 +40,8 @@ export function Perfil() {
     if (!esUsuarioLogueado || !nombreLogueado) return;
 
     const claveVisita = `perfil:ultima-visita:${nombreLogueado.toLowerCase()}`;
-    localStorage.setItem(claveVisita, new Date().toISOString());
+    const currentDate = new Date();
+    localStorage.setItem(claveVisita, currentDate.toISOString());
     localStorage.setItem('ultimaVisitaPerfil', new Date().toLocaleString());
   }, [esUsuarioLogueado, nombreLogueado]);
 
@@ -89,55 +98,72 @@ export function Perfil() {
 
       <p style={{ color: 'green' }}>✓ Estás en tu perfil ({usuarioUrl})</p>
 
-      {/* Tarjeta de dilan */}
-      <article className="perfil-card" aria-labelledby="proyecto-title">
-        <p className="perfil-card__label">Proyecto · Laboratorio 1</p>
-        <h2 id="proyecto-title">Videoteca educativa</h2>
-        <p>
-          Plataforma de recursos audiovisuales para la Universidad Central y su
-          carrera de Obstetricia.
-        </p>
-        <dl className="perfil-card__details">
-          <div>
-            <dt>Institución</dt>
-            <dd>Universidad Central</dd>
-          </div>
-          <div>
-            <dt>Carrera</dt>
-            <dd>Obstetricia</dd>
-          </div>
-        </dl>
-        <div className="perfil-card__likes">
-          <p aria-live="polite">
-            <strong>{meGustas}</strong> me gusta
+      {claveUsuario === 'dilan' && (
+        <article className="perfil-card" aria-labelledby="proyecto-dilan-title">
+          <p className="perfil-card__label">Proyecto · Laboratorio 1</p>
+          <h2 id="proyecto-dilan-title">Videoteca educativa</h2>
+          <p>
+            Plataforma de recursos audiovisuales para la Universidad Central y su
+            carrera de Obstetricia.
           </p>
-          <button type="button" onClick={() => setMeGustas((total) => total + 1)}>
-            Me gusta
-          </button>
-        </div>
-      </article>
+          <dl className="perfil-card__details">
+            <div>
+              <dt>Institución</dt>
+              <dd>Universidad Central</dd>
+            </div>
+            <div>
+              <dt>Carrera</dt>
+              <dd>Obstetricia</dd>
+            </div>
+          </dl>
+          <div className="perfil-card__likes">
+            <p aria-live="polite">
+              <strong>{meGustas}</strong> me gusta
+            </p>
+            <button type="button" onClick={() => setMeGustas((total) => total + 1)}>
+              Me gusta
+            </button>
+          </div>
+        </article>
+      )}
 
-      {/* Tarjeta de Ote */}
-      <section style={{
-        border: '1px solid #ccc',
-        borderRadius: '8px',
-        padding: '1.5rem',
-        marginTop: '1rem',
-        maxWidth: '400px'
-      }}>
-        <h2>Tarjeta de Lucas Campos</h2>
-        <p><strong>Rol / Proyecto:</strong> Desarrollador de software colaborando en el área y carrera de Obstetricia.</p>
-
-        <button onClick={handleIncrementarFuMo} style={{ padding: '0.5rem 1rem', cursor: 'pointer' }}>
-          Fumo ({FuMo})
-        </button>
-
-        {FuMo === 11 && (
-          <p style={{ color: 'royalblue', fontWeight: 'bold', marginTop: '0.5rem' }}>
-            ~fumo fumo~
+      {claveUsuario === 'lucas' && (
+        <article className="perfil-card" aria-labelledby="proyecto-lucas-title">
+          <p className="perfil-card__label">Perfil de Lucas Campos</p>
+          <h2 id="proyecto-lucas-title">Desarrollo de software</h2>
+          <p>
+            Colaboración en proyectos para el área y la carrera de Obstetricia.
           </p>
-        )}
-      </section>
+          <div className="perfil-card__likes">
+            <p aria-live="polite">
+              <strong>{FuMo}</strong> interacciones
+            </p>
+            <button type="button" onClick={handleIncrementarFuMo}>
+              Sumar interacción
+            </button>
+          </div>
+          {FuMo === 11 && <p>¡Llegaste a 11 interacciones!</p>}
+        </article>
+      )}
+
+      {claveUsuario === 'mario' && (
+        <article className="perfil-card" aria-labelledby="proyecto-mario-title">
+          <p className="perfil-card__label">Proyecto · Laboratorio 1</p>
+          <h2 id="proyecto-mario-title">Aplicación de Gestión de Tareas</h2>
+          <div className="perfil-card__likes">
+            <p aria-live="polite">
+              <strong>{likesMario}</strong> me gusta
+            </p>
+            <button
+              type="button"
+              onClick={() => setLikesMario((total) => total + 1)}
+            >
+              Me gusta
+            </button>
+          </div>
+          {lastVisit && <p>Última visita: {lastVisit}</p>}
+        </article>
+      )}
     </main>
   );
 }
