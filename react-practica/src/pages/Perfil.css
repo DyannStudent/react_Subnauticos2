@@ -51,6 +51,36 @@
   color: var(--text-h);
 }
 
+.perfil-card__likes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.perfil-card__likes button {
+  min-height: 2.75rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid #247768;
+  border-radius: 4px;
+  background: #247768;
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+.perfil-card__likes button:hover {
+  background: #1c5f54;
+}
+
+.perfil-card__likes button:focus-visible {
+  outline: 2px solid var(--text-h);
+  outline-offset: 2px;
+}
+
 @media (max-width: 520px) {
   .perfil-card {
     padding: 1.25rem;

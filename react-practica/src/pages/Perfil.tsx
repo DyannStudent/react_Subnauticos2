@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import './Perfil.css';
@@ -7,6 +7,7 @@ export function Perfil() {
   const { usuario: usuarioUrl } = useParams<{ usuario: string }>();
   const auth = useContext(AuthContext);
   const usuarioLogueado = auth?.usuario;
+  const [meGustas, setMeGustas] = useState<number>(0);
 
   if (!usuarioLogueado) {
     return (
@@ -49,6 +50,14 @@ export function Perfil() {
             <dd>Obstetricia</dd>
           </div>
         </dl>
+        <div className="perfil-card__likes">
+          <p aria-live="polite">
+            <strong>{meGustas}</strong> me gusta
+          </p>
+          <button type="button" onClick={() => setMeGustas((total) => total + 1)}>
+            Me gusta
+          </button>
+        </div>
       </article>
     </main>
   );
