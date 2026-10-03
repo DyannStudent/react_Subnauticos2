@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import './Perfil.css';
@@ -8,6 +8,19 @@ export function Perfil() {
   const auth = useContext(AuthContext);
   const usuarioLogueado = auth?.usuario;
   const [meGustas, setMeGustas] = useState<number>(0);
+
+  useEffect(() => {
+    if (
+      !usuarioLogueado ||
+      !usuarioUrl ||
+      usuarioLogueado.nombre.toLocaleLowerCase() !== usuarioUrl.toLocaleLowerCase()
+    ) {
+      return;
+    }
+
+    const claveVisita = `perfil:ultima-visita:${usuarioLogueado.nombre.toLocaleLowerCase()}`;
+    localStorage.setItem(claveVisita, new Date().toISOString());
+  }, [usuarioLogueado, usuarioUrl]);
 
   if (!usuarioLogueado) {
     return (
